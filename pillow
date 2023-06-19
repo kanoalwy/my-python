@@ -1,0 +1,32 @@
+from PIL import Image, ImageDraw
+import math
+import os
+from PIL import Image
+
+#放缩图片，使图片宽度不超过new_width，高度不超过new_height
+def resize_image(image, new_width=1920, new_height=1080):
+    #image = Image.open(image_path)
+    width, height = image.size
+    if width > new_width or height > new_height:
+        ratio = min(new_width / width, new_height / height)
+        new_size = (int(width * ratio), int(height * ratio))
+        image = image.resize(new_size)
+    return image
+
+#将一个文件夹中的jpg、png图片全部进行缩小至指定大小，然后依次编号保存
+def resize_image_folder(source_folder, save_folder):
+    i = 1 #起始编号
+    for filename in os.listdir(source_folder):
+        if filename.endswith('.png'):
+            img = Image.open(source_folder + filename)
+            img = img.convert('RGB')
+        else:
+            img = Image.open(source_folder + filename)
+        img = resize_image(img)
+        img.save(save_folder + str(i) + '.jpg')
+        i += 1
+
+source_folder = './base/'
+save_folder = './save/'
+
+resize_image_folder(source_folder, save_folder)
